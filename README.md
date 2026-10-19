@@ -7,7 +7,7 @@ Myounghun Han, Jin-Hyuk Hong · WACV 2027
 Official annotations of the paper ["An Atomic Multi-Tag Taxonomy for Fine-Grained Diagnosis of Scene Text Recognition Models"](#citation). Accepted to **WACV 2027**. The proceedings link is not available yet.
 
 <p align="center">
-  <img src="assets/texonomy.png" alt="Atomic multi-tag taxonomy: Font, Visibility, Background, View, and Layout" width="520">
+  <img src="assets/taxonomy.png" alt="Atomic multi-tag taxonomy: Font, Visibility, Background, View, and Layout" width="520">
 </p>
 
 <p align="center">
