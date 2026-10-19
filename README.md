@@ -2,17 +2,13 @@
 
 Myounghun Han, Jin-Hyuk Hong · WACV 2027
 
-[![Paper](https://img.shields.io/badge/Paper-WACV%202027-blue)](#citation) [![Dataset](https://img.shields.io/badge/Dataset-Hugging%20Face-yellow)](https://huggingface.co/datasets/hoonisone/AtomicTags)
+![Paper](https://img.shields.io/badge/Paper-WACV%202027-blue) ![Dataset](https://img.shields.io/badge/Dataset-Hugging%20Face-yellow)
 
 Official annotations of the paper ["An Atomic Multi-Tag Taxonomy for Fine-Grained Diagnosis of Scene Text Recognition Models"](#citation). Accepted to **WACV 2027**. The proceedings link is not available yet.
 
-<p align="center">
-  <img src="assets/taxonomy.png" alt="Atomic multi-tag taxonomy: Font, Visibility, Background, View, and Layout" width="520">
-</p>
+![Atomic multi-tag taxonomy: Font, Visibility, Background, View, and Layout](assets/taxonomy.png)
 
-<p align="center">
-  <img src="assets/tag_example.png" alt="Real text-crop examples for each atomic tag" width="680">
-</p>
+![Real text-crop examples for each atomic tag](assets/tag_example.png)
 
 This repository provides atomic multi-tag annotations for **K-STR-Bench** and **Union14M**. A text crop can carry several tags from the taxonomy above, so a scene text recognition model can be diagnosed by the type of failure. `image_path` is relative to the folder that contains the CSV.
 
@@ -38,6 +34,47 @@ Union14M_General/
 ```
 
 
+
+## How to use
+
+Download the dataset from Hugging Face. This copies the CSV files and the images into one folder. `image_path` is relative to the folder that contains the CSV.
+
+`<dataset-dir>` is the folder path you choose.
+
+```bash
+pip install -U huggingface_hub
+hf download hoonisone/AtomicTags --repo-type dataset --local-dir <dataset-dir>
+```
+
+Generate the label files:
+
+```bash
+python config.py --dataset-dir <dataset-dir> --pipeline make_tag_labels
+```
+
+`labels/inclusive/stylized.txt`
+
+```text
+0/gist_7_4.jpg	이글
+0/gist_7_5.jpg	피플
+```
+
+`labels/inclusive/stylized.jsonl`
+
+```json
+{"filename":"0/gist_7_4.jpg","text":"이글","width":87,"height":74}
+{"filename":"0/gist_7_5.jpg","text":"피플","width":104,"height":202}
+```
+
+`labels/exclusive/stylized.txt` and `labels/exclusive/stylized.jsonl` use the same two formats.
+
+Write the counts with:
+
+```bash
+python config.py --dataset-dir <dataset-dir> --pipeline analyze_tag_statistics
+```
+
+This writes `analysis/tag_statistics.csv` and `analysis/tag_count.csv` in each split. K-STR-Bench is released with every crop, plus `is_only_korean` and `is_illegible`, so that a user keeps rows where `is_only_korean` is true and `is_illegible` is false. This repository provides only that filtered result.
 
 ## License
 
@@ -75,6 +112,43 @@ These files do not share one license. Union14M-Benchmark and Union14M-General ar
 
 **Union14M.** A scene text recognition dataset collected from 14 public datasets (Jiang et al., ICCV 2023). [GitHub](https://github.com/Mountchicken/Union14M). Union14M-L and Union14M-Benchmark are released from that repository. The splits here are `Union14M_Benchmark` and `Union14M_General`. Each CSV and its image folder already contain only the crops in this release. Tag columns in these tables are separate from the original Union14M annotations.
 
+## Statistics
+
+**Inclusive** counts crops where that tag is true, including crops with other true tags. **Exclusive** counts crops whose only true tag is that tag. K-STR-Bench has no rotated tag.
+
+
+| Tag                    | K-STR-Bench | Union14M-General | Union14M-Benchmark |           |           |     |
+| ---------------------- | ----------- | ---------------- | ------------------ | --------- | --------- | --- |
+| Inclusive              | Exclusive   | Inclusive        | Exclusive          | Inclusive | Exclusive |     |
+| Crops                  | 20,086      | 9,994            | 7,888              |           |           |     |
+| Stylized               | 2,273       | 925              | 791                | 171       | 1,727     | 311 |
+| Inconsistent size      | 602         | 94               | 253                | 25        | 599       | 19  |
+| Incomplete             | 767         | 258              | 844                | 133       | 759       | 82  |
+| Low visibility         | 1,352       | 598              | 6,984              | 4,743     | 307       | 25  |
+| Noisy                  | 2,844       | 1,541            | 696                | 109       | 1,540     | 143 |
+| Distracted             | 3,019       | 644              | 880                | 31        | 3,733     | 127 |
+| Perspective distortion | 3,268       | 945              | 1,231              | 33        | 676       | 4   |
+| Non-single-line        | 118         | 34               | 0                  | 0         | 0         | 0   |
+| Non-straight           | 479         | 79               | 155                | 6         | 2,731     | 203 |
+| Rotated                | —           | 2,127            | 214                | 4,928     | 536       |     |
+
+
+
+| True tags on a crop | K-STR-Bench | Union14M-General | Union14M-Benchmark |
+| ------------------- | ----------- | ---------------- | ------------------ |
+| 0                   | 10,941      | 1,389            | 745                |
+| 1                   | 5,118       | 5,465            | 1,450              |
+| 2                   | 2,814       | 1,685            | 2,671              |
+| 3                   | 942         | 852              | 2,100              |
+| 4                   | 216         | 467              | 738                |
+| 5                   | 46          | 115              | 156                |
+| 6                   | 7           | 20               | 21                 |
+| 7                   | 2           | 1                | 6                  |
+| 8                   | 0           | 0                | 1                  |
+
+
+
+
 ## Citation
 
 If you use these annotations, please cite:
@@ -87,3 +161,4 @@ If you use these annotations, please cite:
     year      = {2027}
 }
 ```
+
