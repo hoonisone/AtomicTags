@@ -33,9 +33,9 @@ Atomic multi-tag annotations for **K-STR-Bench** and **Union14M**. Each text cro
 
 Myounghun Han, Jin-Hyuk Hong · WACV 2027
 
-![Paper](https://img.shields.io/badge/Paper-WACV%202027-blue) ![GitHub](https://img.shields.io/badge/GitHub-AtomicTags-black)
+<img alt="Paper" title="The proceedings link will be available soon." src="https://img.shields.io/badge/Paper-WACV%202027-blue"> [![GitHub](https://img.shields.io/badge/GitHub-AtomicTags-black)](https://github.com/hoonisone/AtomicTags)
 
-Accepted to **WACV 2027**. The proceedings link is not available yet. Code and documentation are on [GitHub](https://github.com/hoonisone/AtomicTags).
+Accepted to **WACV 2027**. Code and documentation are on [GitHub](https://github.com/hoonisone/AtomicTags).
 
 ## Data Sources
 

@@ -2,9 +2,9 @@
 
 MyoungHun Han, Jin-Hyuk Hong · WACV 2027
 
-![Paper](https://img.shields.io/badge/Paper-WACV%202027-blue) ![Dataset](https://img.shields.io/badge/Dataset-Hugging%20Face-yellow)
+<img alt="Paper" title="The proceedings link will be available soon." src="https://img.shields.io/badge/Paper-WACV%202027-blue"> [![Dataset](https://img.shields.io/badge/Dataset-Hugging%20Face-yellow)](https://huggingface.co/datasets/hoonisone/AtomicTags)
 
-Official annotations of the paper ["An Atomic Multi-Tag Taxonomy for Fine-Grained Diagnosis of Scene Text Recognition Models"](#citation). Accepted to **WACV 2027**. The proceedings link is not available yet.
+Official annotations of the paper ["An Atomic Multi-Tag Taxonomy for Fine-Grained Diagnosis of Scene Text Recognition Models"](#citation). Accepted to **WACV 2027**.
 
 ![Atomic multi-tag taxonomy: Font, Visibility, Background, View, and Layout](assets/taxonomy.png)
 
