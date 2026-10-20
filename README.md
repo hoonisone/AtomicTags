@@ -62,8 +62,6 @@ python prepare.py --dataset-dir data --pipeline make_tag_labels
 {"filename":"0/gist_7_5.jpg","text":"피플","width":104,"height":202}
 ```
 
-Exclusive files use the same two formats.
-
 ## License
 
 Source code in this repository is under the [MIT License](LICENSE). That license does not cover the images or the annotations. The Atomic Tag annotations are under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
