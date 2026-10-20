@@ -29,7 +29,7 @@ configs:
 
 # An Atomic Multi-Tag Taxonomy for Fine-Grained Diagnosis of Scene Text Recognition Models
 
-Atomic multi-tag annotations for **K-STR-Bench** and **Union14M**. One text crop can carry several tags, so a scene text recognition model can be diagnosed by the type of failure. Images are stored once. Tags are columns in the CSV. `image_path` is relative to the folder that contains the CSV.
+Atomic multi-tag annotations for **K-STR-Bench** and **Union14M**. Each text crop may have multiple visual challenge tags, enabling fine-grained analysis of recognition performance across individual and co-occurring challenges. Images are stored once. Tags are columns in the CSV. `image_path` is relative to the folder that contains the CSV.
 
 Myounghun Han, Jin-Hyuk Hong · WACV 2027
 
@@ -41,7 +41,7 @@ Accepted to **WACV 2027**. The proceedings link is not available yet. This relea
 
 **K-STR-Bench.** A challenge-aware benchmark for Korean scene text recognition. [GitHub](https://github.com/hoonisone/K-STR-Bench) | [Hugging Face](https://huggingface.co/datasets/hoonisone/K-STR-Bench). The split here is `K_STR_Bench`, from **GIST_Signboard** and **KAIST_Corrected**. **AIHub_Standardized** is part of K-STR-Bench and is not included. The K-STR-Bench release includes every crop and the columns `is_only_korean` and `is_illegible` for filtering. This release is already filtered: `text.v1.0.csv` and the image folders contain only crops where `is_only_korean` is true and `is_illegible` is false.
 
-**Union14M.** A scene text recognition dataset collected from 14 public datasets (Jiang et al., ICCV 2023). [GitHub](https://github.com/Mountchicken/Union14M). Union14M-L and Union14M-Benchmark are released from that repository. The splits here are `Union14M_Benchmark` and `Union14M_General`. Each CSV and its image folder already contain only the crops in this release. Tag columns in these tables are separate from the original Union14M annotations.
+**Union14M.** A scene text recognition dataset collected from 14 public datasets (Jiang et al., ICCV 2023). [GitHub](https://github.com/Mountchicken/Union14M). Union14M-L and Union14M-Benchmark are released from that repository. The splits here are `Union14M_Benchmark` and `Union14M_General`. The `Union14M_Benchmark` split contains 7,888 samples from six challenge-specific subsets, excluding Incomplete, while `Union14M_General` contains 9,994 randomly sampled images from the General subset. Each CSV and its image folder already contain only the crops in this release. Tag columns in these tables are separate from the original Union14M annotations.
 
 Image folders are stored as `text_images.tar`. The CSV files stay beside those archives. Extracting an archive recreates a `text_images` folder next to it. This release does not include the inclusive and exclusive label files.
 
@@ -67,10 +67,7 @@ git clone https://github.com/hoonisone/AtomicTags.git
 cd AtomicTags
 pip install -U huggingface_hub
 hf download hoonisone/AtomicTags --repo-type dataset --local-dir data
-tar -xf data/K_STR_Bench/GIST_Signboard/text_images.tar -C data/K_STR_Bench/GIST_Signboard
-tar -xf data/K_STR_Bench/KAIST_Corrected/text_images.tar -C data/K_STR_Bench/KAIST_Corrected
-tar -xf data/Union14M_Benchmark/text_images.tar -C data/Union14M_Benchmark
-tar -xf data/Union14M_General/text_images.tar -C data/Union14M_General
+python prepare.py --dataset-dir data --pipeline extract_images
 python prepare.py --dataset-dir data --pipeline make_tag_labels
 ```
 
@@ -92,7 +89,7 @@ python prepare.py --dataset-dir data --pipeline make_tag_labels
 
 ## License
 
-Source code is under the MIT License. That license does not cover the images or the annotations.
+Source code is under the MIT License. That license does not cover the images or the annotations. The Atomic Tag annotations are under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 
 These files do not share one license. Union14M-General and Union14M-Benchmark are not separate licenses. An image keeps the license of the Union14M dataset it came from. Names and terms below follow the [Union14M source table](https://github.com/Mountchicken/Union14M/blob/main/docs/source_dataset.md). Unknown means that table does not state a license.
 

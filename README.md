@@ -10,7 +10,7 @@ Official annotations of the paper ["An Atomic Multi-Tag Taxonomy for Fine-Graine
 
 ![Real text-crop examples for each atomic tag](assets/tag_example.png)
 
-This repository provides atomic multi-tag annotations for **K-STR-Bench** and **Union14M**. A text crop can carry several tags from the taxonomy above, so a scene text recognition model can be diagnosed by the type of failure. `image_path` is relative to the folder that contains the CSV.
+This repository provides atomic multi-tag annotations for **K-STR-Bench** and **Union14M**. Each text crop may have multiple visual challenge tags, enabling fine-grained analysis of recognition performance across individual and co-occurring challenges. `image_path` is relative to the folder that contains the CSV.
 
 The release is on Hugging Face: [hoonisone/AtomicTags](https://huggingface.co/datasets/hoonisone/AtomicTags).
 
@@ -44,10 +44,7 @@ git clone https://github.com/hoonisone/AtomicTags.git
 cd AtomicTags
 pip install -U huggingface_hub
 hf download hoonisone/AtomicTags --repo-type dataset --local-dir data
-tar -xf data/K_STR_Bench/GIST_Signboard/text_images.tar -C data/K_STR_Bench/GIST_Signboard
-tar -xf data/K_STR_Bench/KAIST_Corrected/text_images.tar -C data/K_STR_Bench/KAIST_Corrected
-tar -xf data/Union14M_Benchmark/text_images.tar -C data/Union14M_Benchmark
-tar -xf data/Union14M_General/text_images.tar -C data/Union14M_General
+python prepare.py --dataset-dir data --pipeline extract_images
 python prepare.py --dataset-dir data --pipeline make_tag_labels
 ```
 
@@ -69,7 +66,7 @@ python prepare.py --dataset-dir data --pipeline make_tag_labels
 
 ## License
 
-Source code in this repository is under the [MIT License](LICENSE). That license does not cover the images or the annotations.
+Source code in this repository is under the [MIT License](LICENSE). That license does not cover the images or the annotations. The Atomic Tag annotations are under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 
 These files do not share one license. Union14M-Benchmark and Union14M-General are not separate licenses. An image keeps the license of the Union14M dataset it came from. Names and terms below follow the [Union14M source table](https://github.com/Mountchicken/Union14M/blob/main/docs/source_dataset.md). Unknown means that table does not state a license.
 
@@ -101,49 +98,27 @@ These files do not share one license. Union14M-Benchmark and Union14M-General ar
 
 **K-STR-Bench.** A challenge-aware benchmark for Korean scene text recognition. [GitHub](https://github.com/hoonisone/K-STR-Bench) | [Hugging Face](https://huggingface.co/datasets/hoonisone/K-STR-Bench). The split here is `K_STR_Bench`, from **GIST_Signboard** and **KAIST_Corrected**. **AIHub_Standardized** is part of K-STR-Bench and is not included. The K-STR-Bench release includes every crop and the columns `is_only_korean` and `is_illegible` for filtering. This release is already filtered: `text.v1.0.csv` and the image folders contain only crops where `is_only_korean` is true and `is_illegible` is false.
 
-**Union14M.** A scene text recognition dataset collected from 14 public datasets (Jiang et al., ICCV 2023). [GitHub](https://github.com/Mountchicken/Union14M). Union14M-L and Union14M-Benchmark are released from that repository. The splits here are `Union14M_Benchmark` and `Union14M_General`. Each CSV and its image folder already contain only the crops in this release. Tag columns in these tables are separate from the original Union14M annotations.
+**Union14M.** A scene text recognition dataset collected from 14 public datasets (Jiang et al., ICCV 2023). [GitHub](https://github.com/Mountchicken/Union14M). Union14M-L and Union14M-Benchmark are released from that repository. The splits here are `Union14M_Benchmark` and `Union14M_General`. The `Union14M_Benchmark` split contains 7,888 samples from six challenge-specific subsets, excluding Incomplete, while `Union14M_General` contains 9,994 randomly sampled images from the General subset. Each CSV and its image folder already contain only the crops in this release. Tag columns in these tables are separate from the original Union14M annotations.
 
 ## Statistics
 
 **Inclusive** counts crops where that tag is true, including crops with other true tags. **Exclusive** counts crops whose only true tag is that tag.
 
 
-<table>
-  <thead>
-    <tr>
-      <th rowspan="2">Tag</th>
-      <th colspan="2">K-STR-Bench</th>
-      <th colspan="2">Union14M-General</th>
-      <th colspan="2">Union14M-Benchmark</th>
-    </tr>
-    <tr>
-      <th>Inclusive</th>
-      <th>Exclusive</th>
-      <th>Inclusive</th>
-      <th>Exclusive</th>
-      <th>Inclusive</th>
-      <th>Exclusive</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Crops</td>
-      <td colspan="2">20,086</td>
-      <td colspan="2">9,994</td>
-      <td colspan="2">7,888</td>
-    </tr>
-    <tr><td>Stylized</td><td>2,273</td><td>821</td><td>791</td><td>171</td><td>1,727</td><td>311</td></tr>
-    <tr><td>Inconsistent size</td><td>602</td><td>88</td><td>253</td><td>25</td><td>599</td><td>19</td></tr>
-    <tr><td>Incomplete</td><td>767</td><td>193</td><td>844</td><td>133</td><td>759</td><td>82</td></tr>
-    <tr><td>Low visibility</td><td>1,352</td><td>550</td><td>6,984</td><td>4,743</td><td>307</td><td>25</td></tr>
-    <tr><td>Noisy</td><td>2,844</td><td>1,466</td><td>696</td><td>109</td><td>1,540</td><td>143</td></tr>
-    <tr><td>Distracted</td><td>3,019</td><td>457</td><td>880</td><td>31</td><td>3,733</td><td>127</td></tr>
-    <tr><td>Perspective distortion</td><td>3,268</td><td>181</td><td>1,231</td><td>33</td><td>676</td><td>4</td></tr>
-    <tr><td>Non-single-line</td><td>118</td><td>34</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
-    <tr><td>Non-straight</td><td>479</td><td>60</td><td>155</td><td>6</td><td>2,731</td><td>203</td></tr>
-    <tr><td>Rotated</td><td>4,554</td><td>1,052</td><td>2,127</td><td>214</td><td>4,928</td><td>536</td></tr>
-  </tbody>
-</table>
+| Tag                    | K-STR-Bench | Union14M-General | Union14M-Benchmark |           |           |     |
+| ---------------------- | ----------- | ---------------- | ------------------ | --------- | --------- | --- |
+| Inclusive              | Exclusive   | Inclusive        | Exclusive          | Inclusive | Exclusive |     |
+| Crops                  | 20,086      | 9,994            | 7,888              |           |           |     |
+| Stylized               | 2,273       | 821              | 791                | 171       | 1,727     | 311 |
+| Inconsistent size      | 602         | 88               | 253                | 25        | 599       | 19  |
+| Incomplete             | 767         | 193              | 844                | 133       | 759       | 82  |
+| Low visibility         | 1,352       | 550              | 6,984              | 4,743     | 307       | 25  |
+| Noisy                  | 2,844       | 1,466            | 696                | 109       | 1,540     | 143 |
+| Distracted             | 3,019       | 457              | 880                | 31        | 3,733     | 127 |
+| Perspective distortion | 3,268       | 181              | 1,231              | 33        | 676       | 4   |
+| Non-single-line        | 118         | 34               | 0                  | 0         | 0         | 0   |
+| Non-straight           | 479         | 60               | 155                | 6         | 2,731     | 203 |
+| Rotated                | 4,554       | 1,052            | 2,127              | 214       | 4,928     | 536 |
 
 
 

@@ -3,9 +3,11 @@ from __future__ import annotations
 
 import argparse
 import tarfile
+from dataclasses import dataclass
 from pathlib import Path
+from typing import Any
 
-from taxonomy.step import Pipeline
+from taxonomy.step import Pipeline, Step
 from taxonomy.steps.analyze_tag_statistics import AnalyzeTagStatisticsStep
 from taxonomy.steps.make_tag_labels import MakeTagLabelFilesStep
 from taxonomy.steps.upload_huggingface import (
@@ -22,7 +24,12 @@ SPLITS = (
     ("Union14M_General", "text_v.1.0.csv", {}),
 )
 
-PIPELINE_NAMES = ("make_tag_labels", "analyze_tag_statistics", "upload_huggingface")
+PIPELINE_NAMES = (
+    "extract_images",
+    "make_tag_labels",
+    "analyze_tag_statistics",
+    "upload_huggingface",
+)
 
 HUGGINGFACE_REPO_ID = "hoonisone/AtomicTags"
 
@@ -58,11 +65,28 @@ def extract_text_images(archive: Path) -> None:
         handle.extractall(folder, filter="data")
 
 
-def extract_image_archives(dataset_dir: Path) -> None:
+def extract_image_archives(dataset_dir: Path) -> list[str]:
+    missing = [
+        f"{split_name}/{relative_archive}"
+        for split_name, relative_archive in IMAGE_ARCHIVES
+        if not (dataset_dir / split_name / relative_archive).is_file()
+    ]
+    if missing:
+        raise FileNotFoundError("Image archives missing: " + ", ".join(missing))
+    extracted: list[str] = []
     for split_name, relative_archive in IMAGE_ARCHIVES:
         archive = dataset_dir / split_name / relative_archive
-        if archive.is_file():
-            extract_text_images(archive)
+        extract_text_images(archive)
+        extracted.append(f"{split_name}/{relative_archive}")
+    return extracted
+
+
+@dataclass(kw_only=True)
+class ExtractImagesStep(Step):
+    dataset_dir: str
+
+    def run(self) -> dict[str, Any]:
+        return {"archives": extract_image_archives(Path(self.dataset_dir))}
 
 
 def build_pipelines(dataset_dir: Path, repo_id: str) -> dict[str, Pipeline]:
@@ -86,6 +110,12 @@ def build_pipelines(dataset_dir: Path, repo_id: str) -> dict[str, Pipeline]:
     ]
     upload_paths = release_files(SPLITS, IMAGE_ARCHIVES)
     return {
+        "extract_images": Pipeline(
+            name="extract_images",
+            steps=[
+                ExtractImagesStep(name="extract_images", dataset_dir=str(dataset_dir)),
+            ],
+        ),
         "make_tag_labels": Pipeline(name="make_tag_labels", steps=make_tag_labels_steps),
         "analyze_tag_statistics": Pipeline(
             name="analyze_tag_statistics",
@@ -112,7 +142,7 @@ def build_pipelines(dataset_dir: Path, repo_id: str) -> dict[str, Pipeline]:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Build label files, tag statistics, or upload the Hugging Face release."
+        description="Extract images, build label files or tag statistics, or upload the Hugging Face release."
     )
     parser.add_argument(
         "--dataset-dir",
@@ -139,8 +169,6 @@ def main() -> None:
     if args.pipeline == "upload_huggingface":
         ensure_huggingface_login()
         require_metadata_files(dataset_dir, SPLITS)
-    else:
-        extract_image_archives(dataset_dir)
     build_pipelines(dataset_dir, args.repo_id)[args.pipeline].run()
 
 
