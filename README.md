@@ -48,21 +48,21 @@ python prepare.py --dataset-dir data --pipeline extract_images
 python prepare.py --dataset-dir data --pipeline make_tag_labels
 ```
 
-`labels/inclusive/stylized.txt`
+`./K_STR_Bench/labels/inclusive/stylized.txt`
 
 ```text
 0/gist_7_4.jpg	이글
 0/gist_7_5.jpg	피플
 ```
 
-`labels/inclusive/stylized.jsonl`
+`./K_STR_Bench/labels/inclusive/stylized.jsonl`
 
 ```json
 {"filename":"0/gist_7_4.jpg","text":"이글","width":87,"height":74}
 {"filename":"0/gist_7_5.jpg","text":"피플","width":104,"height":202}
 ```
 
-`labels/exclusive/stylized.txt` and `labels/exclusive/stylized.jsonl` use the same two formats.
+`./K_STR_Bench/labels/exclusive/stylized.txt` and `./K_STR_Bench/labels/exclusive/stylized.jsonl` use the same two formats.
 
 ## License
 
