@@ -10,7 +10,7 @@ Official annotations of the paper ["An Atomic Multi-Tag Taxonomy for Fine-Graine
 
 ![Real text-crop examples for each atomic tag](assets/tag_example.png)
 
-This repository provides atomic multi-tag annotations for **K-STR-Bench** and **Union14M**. A text crop can carry several tags from the taxonomy above, so a scene text recognition model can be diagnosed by the type of failure. `image_path` is relative to the folder that contains the CSV.
+This repository provides atomic multi-tag annotations for **K-STR-Bench** and **Union14M**. Each text crop may contain multiple visual challenge tags, enabling fine-grained analysis of recognition performance under individual and co-occurring challenges. `image_path` is relative to the folder that contains the CSV.
 
 The release is on Hugging Face: [hoonisone/AtomicTags](https://huggingface.co/datasets/hoonisone/AtomicTags).
 
@@ -66,7 +66,7 @@ python prepare.py --dataset-dir data --pipeline make_tag_labels
 
 ## License
 
-Source code in this repository is under the [MIT License](LICENSE). That license does not cover the images or the annotations.
+Source code in this repository is under the [MIT License](LICENSE). That license does not cover the images or the annotations. The Atomic Tag annotations are under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 
 These files do not share one license. Union14M-Benchmark and Union14M-General are not separate licenses. An image keeps the license of the Union14M dataset it came from. Names and terms below follow the [Union14M source table](https://github.com/Mountchicken/Union14M/blob/main/docs/source_dataset.md). Unknown means that table does not state a license.
 
@@ -98,7 +98,7 @@ These files do not share one license. Union14M-Benchmark and Union14M-General ar
 
 **K-STR-Bench.** A challenge-aware benchmark for Korean scene text recognition. [GitHub](https://github.com/hoonisone/K-STR-Bench) | [Hugging Face](https://huggingface.co/datasets/hoonisone/K-STR-Bench). The split here is `K_STR_Bench`, from **GIST_Signboard** and **KAIST_Corrected**. **AIHub_Standardized** is part of K-STR-Bench and is not included. The K-STR-Bench release includes every crop and the columns `is_only_korean` and `is_illegible` for filtering. This release is already filtered: `text.v1.0.csv` and the image folders contain only crops where `is_only_korean` is true and `is_illegible` is false.
 
-**Union14M.** A scene text recognition dataset collected from 14 public datasets (Jiang et al., ICCV 2023). [GitHub](https://github.com/Mountchicken/Union14M). Union14M-L and Union14M-Benchmark are released from that repository. The splits here are `Union14M_Benchmark` and `Union14M_General`. Each CSV and its image folder already contain only the crops in this release. Tag columns in these tables are separate from the original Union14M annotations.
+**Union14M.** A scene text recognition dataset collected from 14 public datasets (Jiang et al., ICCV 2023). [GitHub](https://github.com/Mountchicken/Union14M). Union14M-L and Union14M-Benchmark are released from that repository. The splits here are `Union14M_Benchmark` and `Union14M_General`. We annotate 7,888 samples from the six challenge-specific subsets of Union14M-Benchmark other than Incomplete, along with 9,994 randomly sampled images from its General subset. Each CSV and its image folder already contain only the crops in this release. Tag columns in these tables are separate from the original Union14M annotations.
 
 ## Statistics
 
