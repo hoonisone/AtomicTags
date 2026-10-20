@@ -1,8 +1,6 @@
 ---
-
 license: other
 task_categories:
-
 - image-to-text
 language:
 - ko
@@ -15,19 +13,18 @@ size_categories:
 - 10K<n<100K
 configs:
 - config_name: K_STR_Bench
-data_files:
+  data_files:
   - split: test
-  path: K_STR_Bench/text.v1.0.csv
+    path: K_STR_Bench/text.v1.0.csv
   default: true
 - config_name: Union14M_Benchmark
-data_files:
+  data_files:
   - split: test
-  path: Union14M_Benchmark/text.v1.0.csv
+    path: Union14M_Benchmark/text.v1.0.csv
 - config_name: Union14M_General
-data_files:
+  data_files:
   - split: test
-  path: Union14M_General/text_v.1.0.csv
-
+    path: Union14M_General/text_v.1.0.csv
 ---
 
 # An Atomic Multi-Tag Taxonomy for Fine-Grained Diagnosis of Scene Text Recognition Models
