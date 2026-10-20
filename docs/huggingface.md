@@ -85,7 +85,7 @@ python prepare.py --dataset-dir data --pipeline make_tag_labels
 {"filename":"0/gist_7_5.jpg","text":"피플","width":104,"height":202}
 ```
 
-`./K_STR_Bench/labels/exclusive/stylized.txt` and `./K_STR_Bench/labels/exclusive/stylized.jsonl` use the same two formats.
+Exclusive files use the same two formats.
 
 ## License
 
