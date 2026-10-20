@@ -71,25 +71,34 @@ Source code in this repository is under the [MIT License](LICENSE). That license
 These files do not share one license. Union14M-Benchmark and Union14M-General are not separate licenses. An image keeps the license of the Union14M dataset it came from. Names and terms below follow the [Union14M source table](https://github.com/Mountchicken/Union14M/blob/main/docs/source_dataset.md). Unknown means that table does not state a license.
 
 
-| Source      | Subset             | License / terms                                     |
-| ----------- | ------------------ | --------------------------------------------------- |
-| K-STR-Bench | GIST_Signboard     | CC BY 4.0                                           |
-| K-STR-Bench | KAIST_Corrected    | CC BY-SA 3.0                                        |
-| K-STR-Bench | AIHub_Standardized | Not included. Not redistributed; AIHub Terms of Use |
-| Union14M    | KAIST              | CC BY-SA 3.0                                        |
-| Union14M    | NEOCR              | CC BY-NC-SA 4.0                                     |
-| Union14M    | Uber-Text          | Unknown                                             |
-| Union14M    | RCTW               | Unknown                                             |
-| Union14M    | IIIT-ILST          | CC BY 4.0                                           |
-| Union14M    | MTWI               | CC BY-NC 4.0                                        |
-| Union14M    | COCOTextV2         | CC BY 4.0                                           |
-| Union14M    | LSVT               | Unknown                                             |
-| Union14M    | MLT19              | CC BY-NC 4.0                                        |
-| Union14M    | ReCTS              | Unknown                                             |
-| Union14M    | ArT                | Unknown                                             |
-| Union14M    | IntelOCR           | Apache License 2.0                                  |
-| Union14M    | TextOCR            | CC BY 4.0                                           |
-| Union14M    | HierText           | CC BY-SA 4.0                                        |
+<table>
+  <thead>
+    <tr>
+      <th>Source</th>
+      <th>Subset</th>
+      <th>License / terms</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>K-STR-Bench</td><td>GIST_Signboard</td><td>CC BY 4.0</td></tr>
+    <tr><td>K-STR-Bench</td><td>KAIST_Corrected</td><td>CC BY-SA 3.0</td></tr>
+    <tr><td>K-STR-Bench</td><td>AIHub_Standardized</td><td>Not included. Not redistributed; AIHub Terms of Use</td></tr>
+    <tr><td>Union14M</td><td>KAIST</td><td>CC BY-SA 3.0</td></tr>
+    <tr><td>Union14M</td><td>NEOCR</td><td>CC BY-NC-SA 4.0</td></tr>
+    <tr><td>Union14M</td><td>Uber-Text</td><td>Unknown</td></tr>
+    <tr><td>Union14M</td><td>RCTW</td><td>Unknown</td></tr>
+    <tr><td>Union14M</td><td>IIIT-ILST</td><td>CC BY 4.0</td></tr>
+    <tr><td>Union14M</td><td>MTWI</td><td>CC BY-NC 4.0</td></tr>
+    <tr><td>Union14M</td><td>COCOTextV2</td><td>CC BY 4.0</td></tr>
+    <tr><td>Union14M</td><td>LSVT</td><td>Unknown</td></tr>
+    <tr><td>Union14M</td><td>MLT19</td><td>CC BY-NC 4.0</td></tr>
+    <tr><td>Union14M</td><td>ReCTS</td><td>Unknown</td></tr>
+    <tr><td>Union14M</td><td>ArT</td><td>Unknown</td></tr>
+    <tr><td>Union14M</td><td>IntelOCR</td><td>Apache License 2.0</td></tr>
+    <tr><td>Union14M</td><td>TextOCR</td><td>CC BY 4.0</td></tr>
+    <tr><td>Union14M</td><td>HierText</td><td>CC BY-SA 4.0</td></tr>
+  </tbody>
+</table>
 
 
 
@@ -105,34 +114,66 @@ These files do not share one license. Union14M-Benchmark and Union14M-General ar
 **Inclusive** counts crops where that tag is true, including crops with other true tags. **Exclusive** counts crops whose only true tag is that tag.
 
 
-| Tag                    | K-STR-Bench | Union14M-General | Union14M-Benchmark |           |           |     |
-| ---------------------- | ----------- | ---------------- | ------------------ | --------- | --------- | --- |
-| Inclusive              | Exclusive   | Inclusive        | Exclusive          | Inclusive | Exclusive |     |
-| Crops                  | 20,086      | 9,994            | 7,888              |           |           |     |
-| Stylized               | 2,273       | 821              | 791                | 171       | 1,727     | 311 |
-| Inconsistent size      | 602         | 88               | 253                | 25        | 599       | 19  |
-| Incomplete             | 767         | 193              | 844                | 133       | 759       | 82  |
-| Low visibility         | 1,352       | 550              | 6,984              | 4,743     | 307       | 25  |
-| Noisy                  | 2,844       | 1,466            | 696                | 109       | 1,540     | 143 |
-| Distracted             | 3,019       | 457              | 880                | 31        | 3,733     | 127 |
-| Perspective distortion | 3,268       | 181              | 1,231              | 33        | 676       | 4   |
-| Non-single-line        | 118         | 34               | 0                  | 0         | 0         | 0   |
-| Non-straight           | 479         | 60               | 155                | 6         | 2,731     | 203 |
-| Rotated                | 4,554       | 1,052            | 2,127              | 214       | 4,928     | 536 |
+<table>
+  <thead>
+    <tr>
+      <th rowspan="2">Tag</th>
+      <th colspan="2">K-STR-Bench</th>
+      <th colspan="2">Union14M-General</th>
+      <th colspan="2">Union14M-Benchmark</th>
+    </tr>
+    <tr>
+      <th>Inclusive</th>
+      <th>Exclusive</th>
+      <th>Inclusive</th>
+      <th>Exclusive</th>
+      <th>Inclusive</th>
+      <th>Exclusive</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Crops</td>
+      <td colspan="2">20,086</td>
+      <td colspan="2">9,994</td>
+      <td colspan="2">7,888</td>
+    </tr>
+    <tr><td>Stylized</td><td>2,273</td><td>821</td><td>791</td><td>171</td><td>1,727</td><td>311</td></tr>
+    <tr><td>Inconsistent size</td><td>602</td><td>88</td><td>253</td><td>25</td><td>599</td><td>19</td></tr>
+    <tr><td>Incomplete</td><td>767</td><td>193</td><td>844</td><td>133</td><td>759</td><td>82</td></tr>
+    <tr><td>Low visibility</td><td>1,352</td><td>550</td><td>6,984</td><td>4,743</td><td>307</td><td>25</td></tr>
+    <tr><td>Noisy</td><td>2,844</td><td>1,466</td><td>696</td><td>109</td><td>1,540</td><td>143</td></tr>
+    <tr><td>Distracted</td><td>3,019</td><td>457</td><td>880</td><td>31</td><td>3,733</td><td>127</td></tr>
+    <tr><td>Perspective distortion</td><td>3,268</td><td>181</td><td>1,231</td><td>33</td><td>676</td><td>4</td></tr>
+    <tr><td>Non-single-line</td><td>118</td><td>34</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+    <tr><td>Non-straight</td><td>479</td><td>60</td><td>155</td><td>6</td><td>2,731</td><td>203</td></tr>
+    <tr><td>Rotated</td><td>4,554</td><td>1,052</td><td>2,127</td><td>214</td><td>4,928</td><td>536</td></tr>
+  </tbody>
+</table>
 
 
 
-| True tags on a crop | K-STR-Bench | Union14M-General | Union14M-Benchmark |
-| ------------------- | ----------- | ---------------- | ------------------ |
-| 0                   | 9,889       | 1,389            | 745                |
-| 1                   | 4,902       | 5,465            | 1,450              |
-| 2                   | 2,560       | 1,685            | 2,671              |
-| 3                   | 1,892       | 852              | 2,100              |
-| 4                   | 676         | 467              | 738                |
-| 5                   | 135         | 115              | 156                |
-| 6                   | 27          | 20               | 21                 |
-| 7                   | 3           | 1                | 6                  |
-| 8                   | 2           | 0                | 1                  |
+<table>
+  <thead>
+    <tr>
+      <th>True tags on a crop</th>
+      <th>K-STR-Bench</th>
+      <th>Union14M-General</th>
+      <th>Union14M-Benchmark</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>0</td><td>9,889</td><td>1,389</td><td>745</td></tr>
+    <tr><td>1</td><td>4,902</td><td>5,465</td><td>1,450</td></tr>
+    <tr><td>2</td><td>2,560</td><td>1,685</td><td>2,671</td></tr>
+    <tr><td>3</td><td>1,892</td><td>852</td><td>2,100</td></tr>
+    <tr><td>4</td><td>676</td><td>467</td><td>738</td></tr>
+    <tr><td>5</td><td>135</td><td>115</td><td>156</td></tr>
+    <tr><td>6</td><td>27</td><td>20</td><td>21</td></tr>
+    <tr><td>7</td><td>3</td><td>1</td><td>6</td></tr>
+    <tr><td>8</td><td>2</td><td>0</td><td>1</td></tr>
+  </tbody>
+</table>
 
 
 
