@@ -16,40 +16,39 @@ The release is on Hugging Face: [hoonisone/AtomicTags](https://huggingface.co/da
 
 ## Release format
 
-Each split is a folder of image files and one CSV. This is not an LMDB release.
+Each split is one CSV and its image folders. This is not an LMDB release. On Hugging Face, each image folder is stored as `text_images.tar`, and the CSV stays beside that archive so the dataset viewer can open it. Extracting the archive recreates a `text_images` folder next to it.
 
 One crop can have several tags. A folder or archive per tag would store that file many times. Images are stored once. All tags for a crop are columns in the CSV, so a subset is a filter on that table.
 
 ```text
 K_STR_Bench/
 ├── text.v1.0.csv
-├── GIST_Signboard/text_images/
-└── KAIST_Corrected/text_images/
+├── GIST_Signboard/text_images.tar
+└── KAIST_Corrected/text_images.tar
 Union14M_Benchmark/
 ├── text.v1.0.csv
-└── text_images/
+└── text_images.tar
 Union14M_General/
 ├── text_v.1.0.csv
-└── text_images/
+└── text_images.tar
 ```
 
 
 
 ## How to use
 
-Download the dataset from Hugging Face. This copies the CSV files and the images into one folder. `image_path` is relative to the folder that contains the CSV.
-
-`<dataset-dir>` is the folder path you choose.
+Download the dataset from Hugging Face, then extract each `text_images.tar`. The CSV files are already unpacked. `image_path` is relative to the folder that contains the CSV. This repository does not distribute the inclusive and exclusive label files. Create them from the CSV after the images are extracted.
 
 ```bash
+git clone https://github.com/hoonisone/AtomicTags.git
+cd AtomicTags
 pip install -U huggingface_hub
-hf download hoonisone/AtomicTags --repo-type dataset --local-dir <dataset-dir>
-```
-
-Generate the label files:
-
-```bash
-python config.py --dataset-dir <dataset-dir> --pipeline make_tag_labels
+hf download hoonisone/AtomicTags --repo-type dataset --local-dir data
+tar -xf data/K_STR_Bench/GIST_Signboard/text_images.tar -C data/K_STR_Bench/GIST_Signboard
+tar -xf data/K_STR_Bench/KAIST_Corrected/text_images.tar -C data/K_STR_Bench/KAIST_Corrected
+tar -xf data/Union14M_Benchmark/text_images.tar -C data/Union14M_Benchmark
+tar -xf data/Union14M_General/text_images.tar -C data/Union14M_General
+python prepare.py --dataset-dir data --pipeline make_tag_labels
 ```
 
 `labels/inclusive/stylized.txt`
@@ -67,14 +66,6 @@ python config.py --dataset-dir <dataset-dir> --pipeline make_tag_labels
 ```
 
 `labels/exclusive/stylized.txt` and `labels/exclusive/stylized.jsonl` use the same two formats.
-
-Write the counts with:
-
-```bash
-python config.py --dataset-dir <dataset-dir> --pipeline analyze_tag_statistics
-```
-
-This writes `analysis/tag_statistics.csv` and `analysis/tag_count.csv` in each split. K-STR-Bench is released with every crop, plus `is_only_korean` and `is_illegible`, so that a user keeps rows where `is_only_korean` is true and `is_illegible` is false. This repository provides only that filtered result.
 
 ## License
 
@@ -114,37 +105,59 @@ These files do not share one license. Union14M-Benchmark and Union14M-General ar
 
 ## Statistics
 
-**Inclusive** counts crops where that tag is true, including crops with other true tags. **Exclusive** counts crops whose only true tag is that tag. K-STR-Bench has no rotated tag.
+**Inclusive** counts crops where that tag is true, including crops with other true tags. **Exclusive** counts crops whose only true tag is that tag.
 
 
-| Tag                    | K-STR-Bench | Union14M-General | Union14M-Benchmark |           |           |     |
-| ---------------------- | ----------- | ---------------- | ------------------ | --------- | --------- | --- |
-| Inclusive              | Exclusive   | Inclusive        | Exclusive          | Inclusive | Exclusive |     |
-| Crops                  | 20,086      | 9,994            | 7,888              |           |           |     |
-| Stylized               | 2,273       | 925              | 791                | 171       | 1,727     | 311 |
-| Inconsistent size      | 602         | 94               | 253                | 25        | 599       | 19  |
-| Incomplete             | 767         | 258              | 844                | 133       | 759       | 82  |
-| Low visibility         | 1,352       | 598              | 6,984              | 4,743     | 307       | 25  |
-| Noisy                  | 2,844       | 1,541            | 696                | 109       | 1,540     | 143 |
-| Distracted             | 3,019       | 644              | 880                | 31        | 3,733     | 127 |
-| Perspective distortion | 3,268       | 945              | 1,231              | 33        | 676       | 4   |
-| Non-single-line        | 118         | 34               | 0                  | 0         | 0         | 0   |
-| Non-straight           | 479         | 79               | 155                | 6         | 2,731     | 203 |
-| Rotated                | —           | 2,127            | 214                | 4,928     | 536       |     |
+<table>
+  <thead>
+    <tr>
+      <th rowspan="2">Tag</th>
+      <th colspan="2">K-STR-Bench</th>
+      <th colspan="2">Union14M-General</th>
+      <th colspan="2">Union14M-Benchmark</th>
+    </tr>
+    <tr>
+      <th>Inclusive</th>
+      <th>Exclusive</th>
+      <th>Inclusive</th>
+      <th>Exclusive</th>
+      <th>Inclusive</th>
+      <th>Exclusive</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Crops</td>
+      <td colspan="2">20,086</td>
+      <td colspan="2">9,994</td>
+      <td colspan="2">7,888</td>
+    </tr>
+    <tr><td>Stylized</td><td>2,273</td><td>821</td><td>791</td><td>171</td><td>1,727</td><td>311</td></tr>
+    <tr><td>Inconsistent size</td><td>602</td><td>88</td><td>253</td><td>25</td><td>599</td><td>19</td></tr>
+    <tr><td>Incomplete</td><td>767</td><td>193</td><td>844</td><td>133</td><td>759</td><td>82</td></tr>
+    <tr><td>Low visibility</td><td>1,352</td><td>550</td><td>6,984</td><td>4,743</td><td>307</td><td>25</td></tr>
+    <tr><td>Noisy</td><td>2,844</td><td>1,466</td><td>696</td><td>109</td><td>1,540</td><td>143</td></tr>
+    <tr><td>Distracted</td><td>3,019</td><td>457</td><td>880</td><td>31</td><td>3,733</td><td>127</td></tr>
+    <tr><td>Perspective distortion</td><td>3,268</td><td>181</td><td>1,231</td><td>33</td><td>676</td><td>4</td></tr>
+    <tr><td>Non-single-line</td><td>118</td><td>34</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+    <tr><td>Non-straight</td><td>479</td><td>60</td><td>155</td><td>6</td><td>2,731</td><td>203</td></tr>
+    <tr><td>Rotated</td><td>4,554</td><td>1,052</td><td>2,127</td><td>214</td><td>4,928</td><td>536</td></tr>
+  </tbody>
+</table>
 
 
 
 | True tags on a crop | K-STR-Bench | Union14M-General | Union14M-Benchmark |
 | ------------------- | ----------- | ---------------- | ------------------ |
-| 0                   | 10,941      | 1,389            | 745                |
-| 1                   | 5,118       | 5,465            | 1,450              |
-| 2                   | 2,814       | 1,685            | 2,671              |
-| 3                   | 942         | 852              | 2,100              |
-| 4                   | 216         | 467              | 738                |
-| 5                   | 46          | 115              | 156                |
-| 6                   | 7           | 20               | 21                 |
-| 7                   | 2           | 1                | 6                  |
-| 8                   | 0           | 0                | 1                  |
+| 0                   | 9,889       | 1,389            | 745                |
+| 1                   | 4,902       | 5,465            | 1,450              |
+| 2                   | 2,560       | 1,685            | 2,671              |
+| 3                   | 1,892       | 852              | 2,100              |
+| 4                   | 676         | 467              | 738                |
+| 5                   | 135         | 115              | 156                |
+| 6                   | 27          | 20               | 21                 |
+| 7                   | 3           | 1                | 6                  |
+| 8                   | 2           | 0                | 1                  |
 
 
 

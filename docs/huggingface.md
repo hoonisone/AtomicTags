@@ -43,18 +43,52 @@ Accepted to **WACV 2027**. The proceedings link is not available yet. This relea
 
 **Union14M.** A scene text recognition dataset collected from 14 public datasets (Jiang et al., ICCV 2023). [GitHub](https://github.com/Mountchicken/Union14M). Union14M-L and Union14M-Benchmark are released from that repository. The splits here are `Union14M_Benchmark` and `Union14M_General`. Each CSV and its image folder already contain only the crops in this release. Tag columns in these tables are separate from the original Union14M annotations.
 
+Image folders are stored as `text_images.tar`. The CSV files stay beside those archives. Extracting an archive recreates a `text_images` folder next to it. This release does not include the inclusive and exclusive label files.
+
 ```text
 K_STR_Bench/
 ├── text.v1.0.csv
-├── GIST_Signboard/text_images/
-└── KAIST_Corrected/text_images/
+├── GIST_Signboard/text_images.tar
+└── KAIST_Corrected/text_images.tar
 Union14M_Benchmark/
 ├── text.v1.0.csv
-└── text_images/
+└── text_images.tar
 Union14M_General/
 ├── text_v.1.0.csv
-└── text_images/
+└── text_images.tar
 ```
+
+## How to use
+
+Download this dataset, then extract each `text_images.tar`. The CSV files are already unpacked. `image_path` is relative to the folder that contains the CSV. Create the inclusive and exclusive label files from the CSV with the code on [GitHub](https://github.com/hoonisone/AtomicTags).
+
+```bash
+git clone https://github.com/hoonisone/AtomicTags.git
+cd AtomicTags
+pip install -U huggingface_hub
+hf download hoonisone/AtomicTags --repo-type dataset --local-dir data
+tar -xf data/K_STR_Bench/GIST_Signboard/text_images.tar -C data/K_STR_Bench/GIST_Signboard
+tar -xf data/K_STR_Bench/KAIST_Corrected/text_images.tar -C data/K_STR_Bench/KAIST_Corrected
+tar -xf data/Union14M_Benchmark/text_images.tar -C data/Union14M_Benchmark
+tar -xf data/Union14M_General/text_images.tar -C data/Union14M_General
+python prepare.py --dataset-dir data --pipeline make_tag_labels
+```
+
+`labels/inclusive/stylized.txt`
+
+```text
+0/gist_7_4.jpg	이글
+0/gist_7_5.jpg	피플
+```
+
+`labels/inclusive/stylized.jsonl`
+
+```json
+{"filename":"0/gist_7_4.jpg","text":"이글","width":87,"height":74}
+{"filename":"0/gist_7_5.jpg","text":"피플","width":104,"height":202}
+```
+
+`labels/exclusive/stylized.txt` and `labels/exclusive/stylized.jsonl` use the same two formats.
 
 ## License
 
@@ -84,7 +118,7 @@ These files do not share one license. Union14M-General and Union14M-Benchmark ar
 
 ## Statistics
 
-**Inclusive** counts crops where that tag is true, including crops with other true tags. **Exclusive** counts crops whose only true tag is that tag. K-STR-Bench has no rotated tag.
+**Inclusive** counts crops where that tag is true, including crops with other true tags. **Exclusive** counts crops whose only true tag is that tag.
 
 <table>
   <thead>
@@ -110,30 +144,30 @@ These files do not share one license. Union14M-General and Union14M-Benchmark ar
       <td colspan="2">9,994</td>
       <td colspan="2">7,888</td>
     </tr>
-    <tr><td>Stylized</td><td>2,273</td><td>925</td><td>791</td><td>171</td><td>1,727</td><td>311</td></tr>
-    <tr><td>Inconsistent size</td><td>602</td><td>94</td><td>253</td><td>25</td><td>599</td><td>19</td></tr>
-    <tr><td>Incomplete</td><td>767</td><td>258</td><td>844</td><td>133</td><td>759</td><td>82</td></tr>
-    <tr><td>Low visibility</td><td>1,352</td><td>598</td><td>6,984</td><td>4,743</td><td>307</td><td>25</td></tr>
-    <tr><td>Noisy</td><td>2,844</td><td>1,541</td><td>696</td><td>109</td><td>1,540</td><td>143</td></tr>
-    <tr><td>Distracted</td><td>3,019</td><td>644</td><td>880</td><td>31</td><td>3,733</td><td>127</td></tr>
-    <tr><td>Perspective distortion</td><td>3,268</td><td>945</td><td>1,231</td><td>33</td><td>676</td><td>4</td></tr>
+    <tr><td>Stylized</td><td>2,273</td><td>821</td><td>791</td><td>171</td><td>1,727</td><td>311</td></tr>
+    <tr><td>Inconsistent size</td><td>602</td><td>88</td><td>253</td><td>25</td><td>599</td><td>19</td></tr>
+    <tr><td>Incomplete</td><td>767</td><td>193</td><td>844</td><td>133</td><td>759</td><td>82</td></tr>
+    <tr><td>Low visibility</td><td>1,352</td><td>550</td><td>6,984</td><td>4,743</td><td>307</td><td>25</td></tr>
+    <tr><td>Noisy</td><td>2,844</td><td>1,466</td><td>696</td><td>109</td><td>1,540</td><td>143</td></tr>
+    <tr><td>Distracted</td><td>3,019</td><td>457</td><td>880</td><td>31</td><td>3,733</td><td>127</td></tr>
+    <tr><td>Perspective distortion</td><td>3,268</td><td>181</td><td>1,231</td><td>33</td><td>676</td><td>4</td></tr>
     <tr><td>Non-single-line</td><td>118</td><td>34</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
-    <tr><td>Non-straight</td><td>479</td><td>79</td><td>155</td><td>6</td><td>2,731</td><td>203</td></tr>
-    <tr><td>Rotated</td><td colspan="2">—</td><td>2,127</td><td>214</td><td>4,928</td><td>536</td></tr>
+    <tr><td>Non-straight</td><td>479</td><td>60</td><td>155</td><td>6</td><td>2,731</td><td>203</td></tr>
+    <tr><td>Rotated</td><td>4,554</td><td>1,052</td><td>2,127</td><td>214</td><td>4,928</td><td>536</td></tr>
   </tbody>
 </table>
 
 | True tags on a crop | K-STR-Bench | Union14M-General | Union14M-Benchmark |
 | ---: | ---: | ---: | ---: |
-| 0 | 10,941 | 1,389 | 745 |
-| 1 | 5,118 | 5,465 | 1,450 |
-| 2 | 2,814 | 1,685 | 2,671 |
-| 3 | 942 | 852 | 2,100 |
-| 4 | 216 | 467 | 738 |
-| 5 | 46 | 115 | 156 |
-| 6 | 7 | 20 | 21 |
-| 7 | 2 | 1 | 6 |
-| 8 | 0 | 0 | 1 |
+| 0 | 9,889 | 1,389 | 745 |
+| 1 | 4,902 | 5,465 | 1,450 |
+| 2 | 2,560 | 1,685 | 2,671 |
+| 3 | 1,892 | 852 | 2,100 |
+| 4 | 676 | 467 | 738 |
+| 5 | 135 | 115 | 156 |
+| 6 | 27 | 20 | 21 |
+| 7 | 3 | 1 | 6 |
+| 8 | 2 | 0 | 1 |
 
 ## Citation
 

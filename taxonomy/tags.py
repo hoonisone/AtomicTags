@@ -8,7 +8,7 @@ TAG_COLUMNS = (
     "is_noisy_background",
     "is_distracted",
     "is_perspective_distorted",
-    "is_multiline",
+    "is_non_single_line",
     "is_nonstraight",
     "is_rotated",
 )
