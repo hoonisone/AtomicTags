@@ -177,7 +177,7 @@ If you use these annotations, please cite:
 ```bibtex
 @inproceedings{atomicmultitag2027,
     title     = {An Atomic Multi-Tag Taxonomy for Fine-Grained Diagnosis of Scene Text Recognition Models},
-    author    = {Han, Myounghun and Hong, Jin-Hyuk},
+    author    = {Han, MyoungHun and Hong, Jin-Hyuk},
     booktitle = {Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision (WACV)},
     year      = {2027}
 }

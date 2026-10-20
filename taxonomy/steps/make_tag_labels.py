@@ -1,4 +1,4 @@
-"""Build inclusive and exclusive tag label files from an annotation CSV."""
+"""Build inclusive, exclusive, and orientation label files from an annotation CSV."""
 from __future__ import annotations
 
 import csv
@@ -13,6 +13,9 @@ from taxonomy.tags import TAG_COLUMNS, is_true, row_matches, tag_name
 CSV_ENCODING = "utf-8-sig"
 TXT_ENCODING = "utf-8"
 TEXT_IMAGES_MARKER = "text_images/"
+ROTATED_COLUMN = "is_rotated"
+ORIENTATION_COLUMN = "orientation"
+ORIENTATION_ORDER = ("H", "V", "HD", "D", "DV")
 
 
 def norm_path(path_text: str) -> str:
@@ -33,6 +36,23 @@ def clean_text(value: object) -> str:
 
 def positive_tags(row: dict[str, str], tag_columns: list[str]) -> list[str]:
     return [column for column in tag_columns if is_true(row.get(column))]
+
+
+def other_tags_absent(row: dict[str, str], tag_columns: list[str]) -> bool:
+    return not any(is_true(row.get(column)) for column in tag_columns if column != ROTATED_COLUMN)
+
+
+def orientation_name(value: object) -> str | None:
+    text = str(value or "").strip()
+    if not text or text.casefold() == "undefined" or text in {".", ".."} or "/" in text or "\\" in text:
+        return None
+    return text
+
+
+def ordered_orientation_names(names: set[str]) -> list[str]:
+    ordered = [name for name in ORIENTATION_ORDER if name in names]
+    extras = sorted(names.difference(ORIENTATION_ORDER))
+    return ordered + extras
 
 
 def parse_positive_int(value: object) -> int | None:
@@ -131,12 +151,14 @@ def execute(
         reader = csv.DictReader(handle)
         if reader.fieldnames is None:
             raise ValueError(f"CSV has no header: {csv_path}")
-        tag_columns = [column for column in TAG_COLUMNS if column in reader.fieldnames]
+        fieldnames = list(reader.fieldnames)
+        tag_columns = [column for column in TAG_COLUMNS if column in fieldnames]
         if not tag_columns:
             raise ValueError(f"CSV has no tag columns: {csv_path}")
-        missing = [column for column in ("image_path", "label", *filters) if column not in reader.fieldnames]
+        missing = [column for column in ("image_path", "label", *filters) if column not in fieldnames]
         if missing:
             raise ValueError(f"CSV missing columns {missing}: {csv_path}")
+        has_orientation = ORIENTATION_COLUMN in fieldnames
         rows = list(reader)
 
     grouped: dict[str, dict[str, list[str]]] = {
@@ -147,6 +169,8 @@ def execute(
         "inclusive": {column: [] for column in tag_columns},
         "exclusive": {column: [] for column in tag_columns},
     }
+    orientation_txt: dict[str, list[str]] = {}
+    orientation_jsonl: dict[str, list[str]] = {}
     skipped = 0
     filtered_out = 0
 
@@ -165,7 +189,9 @@ def execute(
             skipped += 1
             continue
         tags = positive_tags(row, tag_columns)
-        if not tags:
+        direction = orientation_name(row.get(ORIENTATION_COLUMN)) if has_orientation else None
+        pure_direction = direction is not None and other_tags_absent(row, tag_columns)
+        if not tags and not pure_direction:
             continue
         txt_line = format_txt(filename, text)
         jsonl_line = format_jsonl(filename, text, size[0], size[1])
@@ -176,6 +202,9 @@ def execute(
             column = tags[0]
             grouped["exclusive"][column].append(txt_line)
             grouped_jsonl["exclusive"][column].append(jsonl_line)
+        if direction is not None and pure_direction:
+            orientation_txt.setdefault(direction, []).append(txt_line)
+            orientation_jsonl.setdefault(direction, []).append(jsonl_line)
 
     written: dict[str, dict[str, int]] = {"inclusive": {}, "exclusive": {}}
     for mode in ("inclusive", "exclusive"):
@@ -184,6 +213,15 @@ def execute(
             folder = labels_dir / mode
             written[mode][stem] = write_lines(folder / f"{stem}.txt", grouped[mode][column])
             write_lines(folder / f"{stem}.jsonl", grouped_jsonl[mode][column])
+
+    written_orientation: dict[str, int] = {}
+    orientation_dir = labels_dir / "orientation"
+    for direction in ordered_orientation_names(set(orientation_txt)):
+        written_orientation[direction] = write_lines(
+            orientation_dir / f"{direction}.txt",
+            orientation_txt[direction],
+        )
+        write_lines(orientation_dir / f"{direction}.jsonl", orientation_jsonl[direction])
 
     return {
         "csv_path": str(csv_path),
@@ -195,6 +233,7 @@ def execute(
         "tags": [tag_name(column) for column in tag_columns],
         "inclusive": written["inclusive"],
         "exclusive": written["exclusive"],
+        "orientation": written_orientation,
     }
 
 
